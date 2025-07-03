@@ -1,9 +1,11 @@
 # Makefile para gerenciamento do Hyperledger Besu
-.PHONY: help setup start stop status restart reset clean logs check init explorer setup-perms fix purge-data
+.PHONY: help setup start stop status restart reset clean logs check init explorer setup-perms fix purge-data init-dirs
 
 # Variáveis
 DOCKER_COMPOSE = docker compose -p blockchain
 DATA_DIRS = node1 node2 node3 node4 networkFiles
+BESU_USER = 1000
+BESU_GROUP = 1000
 
 # Cores para output
 GREEN := \033[0;32m
@@ -31,16 +33,27 @@ help:
 	@echo ""
 	@echo "${RED}⚠️  Atenção:${NC} Os comandos 'reset', 'clean' e 'purge-data' removem dados da blockchain!"
 
-setup:
+init-dirs:
+	@echo "${YELLOW}Criando e configurando diretórios...${NC}"
+	@sudo mkdir -p ./data/networkFiles
+	@sudo mkdir -p ./data/node{1,2,3,4}/data
+	@sudo chown -R $(BESU_USER):$(BESU_GROUP) ./data
+	@sudo chmod -R 755 ./data
+	@sudo chmod -R g+rwx ./data
+	@echo "${GREEN}Diretórios criados e permissões configuradas.${NC}"
+
+setup: init-dirs
 	@echo "${GREEN}Inicializando a rede Besu...${NC}"
-	@mkdir -p ./data
-	@chmod +x ./init.sh
-	@./init.sh
+	@sudo chmod +x ./init.sh
+	@sudo -E ./init.sh
 	@echo "${YELLOW}Verificando se os arquivos necessários foram criados...${NC}"
 	@if [ ! -f "./data/genesis.json" ]; then \
 		echo "${RED}Erro: Arquivo genesis.json não encontrado!${NC}"; \
 		exit 1; \
 	fi
+	@sudo chown -R $(BESU_USER):$(BESU_GROUP) ./data
+	@sudo chmod -R 755 ./data
+	@sudo chmod -R g+rwx ./data
 	@echo "${GREEN}Inicialização concluída!${NC}"
 	@echo "${YELLOW}Para iniciar os containers, use: make start${NC}"
 
@@ -48,7 +61,10 @@ start:
 	@echo "${GREEN}Verificando pré-requisitos...${NC}"
 	@mkdir -p ./scripts
 	@if [ ! -f "./scripts/fix-permissions.sh" ]; then $(MAKE) fix > /dev/null; fi
-	@if [ -f "./scripts/fix-permissions.sh" ]; then ./scripts/fix-permissions.sh > /dev/null || exit 1; fi
+	@if [ -f "./scripts/fix-permissions.sh" ]; then sudo ./scripts/fix-permissions.sh > /dev/null || exit 1; fi
+	@sudo chown -R $(BESU_USER):$(BESU_GROUP) ./data
+	@sudo chmod -R 755 ./data
+	@sudo chmod -R g+rwx ./data
 	@echo "${GREEN}Iniciando containers Besu...${NC}"
 	@$(DOCKER_COMPOSE) up -d
 	@echo "${GREEN}Containers iniciados. Aguarde alguns instantes até que a rede esteja sincronizada.${NC}"

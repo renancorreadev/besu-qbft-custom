@@ -7,6 +7,8 @@ services:
       - "/bin/bash"
       - "-c"
       - >
+        mkdir -p /opt/besu/data &&
+        chown -R 1000:1000 /opt/besu/data &&
         sleep 10; 
         /opt/besu/bin/besu 
         --data-path=/opt/besu/data 
@@ -29,9 +31,9 @@ services:
         --pruning-enabled=true 
         --pruning-blocks-retained=256
     volumes:
-      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/genesis.json:/opt/besu/genesis.json:ro
       - ./data/node1/data:/opt/besu/data
-      - ./data:/data
+      - ./data:/data:ro
     ports:
       - "8545:8545"
       - "30303:30303"
@@ -56,6 +58,8 @@ services:
       - "/bin/bash"
       - "-c"
       - >
+        mkdir -p /opt/besu/data &&
+        chown -R 1000:1000 /opt/besu/data &&
         sleep 10;
         /opt/besu/bin/besu 
         --data-path=/opt/besu/data 
@@ -77,9 +81,9 @@ services:
         --pruning-enabled=true 
         --pruning-blocks-retained=256
     volumes:
-      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/genesis.json:/opt/besu/genesis.json:ro
       - ./data/node2/data:/opt/besu/data
-      - ./data/log-config.xml:/config/log-config.xml
+      - ./data/log-config.xml:/config/log-config.xml:ro
     ports:
       - "8546:8546"
       - "30304:30304"
@@ -106,6 +110,8 @@ services:
       - "/bin/bash"
       - "-c"
       - >
+        mkdir -p /opt/besu/data &&
+        chown -R 1000:1000 /opt/besu/data &&
         sleep 10; 
         /opt/besu/bin/besu 
         --data-path=/opt/besu/data 
@@ -127,9 +133,9 @@ services:
         --pruning-enabled=true 
         --pruning-blocks-retained=256
     volumes:
-      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/genesis.json:/opt/besu/genesis.json:ro
       - ./data/node3/data:/opt/besu/data
-      - ./data/log-config.xml:/config/log-config.xml
+      - ./data/log-config.xml:/config/log-config.xml:ro
     ports:
       - "8547:8547"
       - "30305:30305"
@@ -156,6 +162,8 @@ services:
       - "/bin/bash"
       - "-c"
       - >
+        mkdir -p /opt/besu/data &&
+        chown -R 1000:1000 /opt/besu/data &&
         sleep 10; 
         /opt/besu/bin/besu 
         --data-path=/opt/besu/data 
@@ -177,9 +185,9 @@ services:
         --pruning-enabled=true 
         --pruning-blocks-retained=256
     volumes:
-      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/genesis.json:/opt/besu/genesis.json:ro
       - ./data/node4/data:/opt/besu/data
-      - ./data/log-config.xml:/config/log-config.xml
+      - ./data/log-config.xml:/config/log-config.xml:ro
     ports:
       - "8548:8548"
       - "30306:30306"
