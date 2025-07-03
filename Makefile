@@ -1,8 +1,9 @@
 # Makefile para gerenciamento do Hyperledger Besu
-.PHONY: help setup start stop status restart reset clean logs check init explorer setup-perms fix
+.PHONY: help setup start stop status restart reset clean logs check init explorer setup-perms fix purge-data
 
 # Variáveis
 DOCKER_COMPOSE = docker compose -p blockchain
+DATA_DIRS = node1 node2 node3 node4 networkFiles
 
 # Cores para output
 GREEN := \033[0;32m
@@ -26,8 +27,9 @@ help:
 	@echo "  ${YELLOW}make explorer${NC}     - Acessa o explorador da rede"
 	@echo "  ${YELLOW}make setup-perms${NC}  - Configura permissões corretas para os arquivos"
 	@echo "  ${YELLOW}make fix${NC}          - Corrige a estrutura de arquivos"
+	@echo "  ${YELLOW}make purge-data${NC}   - Remove apenas os dados da blockchain mantendo configurações"
 	@echo ""
-	@echo "${RED}⚠️  Atenção:${NC} Os comandos 'reset' e 'clean' removem todos os dados da blockchain!"
+	@echo "${RED}⚠️  Atenção:${NC} Os comandos 'reset', 'clean' e 'purge-data' removem dados da blockchain!"
 
 setup:
 	@echo "${GREEN}Inicializando a rede Besu...${NC}"
@@ -112,4 +114,20 @@ fix:
 	@mkdir -p ./scripts ./data
 	@chmod +x ./scripts/fix-permissions.sh
 	@./scripts/fix-permissions.sh
-	@echo "${GREEN}Correção concluída. Tente iniciar a rede novamente com 'make start'.${NC}" 
+	@echo "${GREEN}Correção concluída. Tente iniciar a rede novamente com 'make start'.${NC}"
+
+purge-data:
+	@echo "${RED}⚠️  Atenção: Isso removerá os dados da blockchain mantendo as configurações!${NC}"
+	@read -p "Tem certeza que deseja continuar? (y/n): " confirm && [ $${confirm:-n} = "y" ] || exit 1
+	@echo "${YELLOW}Parando containers...${NC}"
+	@$(DOCKER_COMPOSE) stop
+	@echo "${YELLOW}Removendo dados dos nós...${NC}"
+	@for dir in $(DATA_DIRS); do \
+		if [ "$$dir" = "networkFiles" ]; then \
+			find ./data/$$dir -mindepth 1 -not -name 'genesis.json' -not -name 'log-config.xml' -not -name 'qbftConfigFile.json' -delete; \
+		else \
+			rm -rf ./data/$$dir/*; \
+		fi \
+	done
+	@echo "${GREEN}Dados removidos com sucesso.${NC}"
+	@echo "${YELLOW}Para reiniciar a rede, use: make start${NC}" 
