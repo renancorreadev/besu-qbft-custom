@@ -1,0 +1,204 @@
+services:
+  bootnode:
+    container_name: bootnode
+    image: hyperledger/besu:23.4.4
+    user: "1000:1000"
+    entrypoint:
+      - "/bin/bash"
+      - "-c"
+      - >
+        sleep 10; 
+        /opt/besu/bin/besu 
+        --data-path=/opt/besu/data 
+        --metrics-enabled 
+        --metrics-host=0.0.0.0 
+        --metrics-port=9545 
+        --genesis-file=/opt/besu/genesis.json 
+        --rpc-http-enabled 
+        --rpc-ws-enabled 
+        --rpc-ws-port=6174 
+        --rpc-ws-host=0.0.0.0 
+        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT
+        --host-allowlist='*' 
+        --rpc-http-cors-origins='all' 
+        --rpc-http-port=8545 
+        --rpc-http-host=0.0.0.0 
+        --rpc-http-api=QBFT,IBFT,NET,ETH,TXPOOL
+        --min-gas-price=0 
+        --rpc-http-max-batch-size=10
+        --pruning-enabled=true 
+        --pruning-blocks-retained=256
+    volumes:
+      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/node1/data:/opt/besu/data
+      - ./data:/data
+    ports:
+      - "8545:8545"
+      - "30303:30303"
+      - "6174:6174"
+    networks:
+      blockchain-network:
+        ipv4_address: 172.16.239.10
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4g
+        reservations:
+          cpus: '1.0'
+          memory: 2g
+
+  validator_1:
+    container_name: validator_1
+    image: hyperledger/besu:23.4.4
+    user: "1000:1000"
+    entrypoint:
+      - "/bin/bash"
+      - "-c"
+      - >
+        sleep 10;
+        /opt/besu/bin/besu 
+        --data-path=/opt/besu/data 
+        --metrics-enabled 
+        --metrics-host=0.0.0.0 
+        --metrics-port=9546 
+        --genesis-file=/opt/besu/genesis.json 
+        --bootnodes='enode://a50a100f8c28b181a07019ff1ecdfd9fb4ba33822a84e57f5e4dc339c16149cc03f7e5adcffcee7095a8419c83fc3923618cdb3d6f3985a26b4d983ba550ac1d@172.16.239.10:30303'
+        --p2p-port=30304 
+        --rpc-http-enabled 
+        --rpc-ws-enabled 
+        --rpc-ws-port=6175 
+        --rpc-http-api=ETH,NET,IBFT,TXPOOL 
+        --host-allowlist='*' 
+        --rpc-http-cors-origins='all' 
+        --rpc-http-port=8546 
+        --rpc-http-host=0.0.0.0 
+        --min-gas-price=0
+        --pruning-enabled=true 
+        --pruning-blocks-retained=256
+    volumes:
+      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/node2/data:/opt/besu/data
+      - ./data/log-config.xml:/config/log-config.xml
+    ports:
+      - "8546:8546"
+      - "30304:30304"
+      - "6175:6175"
+    depends_on:
+      - bootnode
+    networks:
+      blockchain-network:
+        ipv4_address: 172.16.239.11
+    deploy:
+        resources:
+          limits:
+            cpus: '2.0'
+            memory: 4g
+          reservations:
+            cpus: '1.0'
+            memory: 2g
+
+  validator_2:
+    container_name: validator_2
+    image: hyperledger/besu:23.4.4
+    user: "1000:1000"
+    entrypoint:
+      - "/bin/bash"
+      - "-c"
+      - >
+        sleep 10; 
+        /opt/besu/bin/besu 
+        --data-path=/opt/besu/data 
+        --metrics-enabled 
+        --metrics-host=0.0.0.0 
+        --metrics-port=9547 
+        --genesis-file=/opt/besu/genesis.json 
+        --bootnodes='enode://a50a100f8c28b181a07019ff1ecdfd9fb4ba33822a84e57f5e4dc339c16149cc03f7e5adcffcee7095a8419c83fc3923618cdb3d6f3985a26b4d983ba550ac1d@172.16.239.10:30303'
+        --p2p-port=30305 
+        --rpc-http-enabled 
+        --rpc-ws-enabled 
+        --rpc-ws-port=6176 
+        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT
+        --host-allowlist='*' 
+        --rpc-http-cors-origins='all' 
+        --rpc-http-port=8547 
+        --rpc-http-host=0.0.0.0 
+        --min-gas-price=0
+        --pruning-enabled=true 
+        --pruning-blocks-retained=256
+    volumes:
+      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/node3/data:/opt/besu/data
+      - ./data/log-config.xml:/config/log-config.xml
+    ports:
+      - "8547:8547"
+      - "30305:30305"
+      - "6176:6176"
+    depends_on:
+      - bootnode
+    networks:
+      blockchain-network:
+        ipv4_address: 172.16.239.12
+    deploy:
+        resources:
+          limits:
+            cpus: '2.0'
+            memory: 4g
+          reservations:
+            cpus: '1.0'
+            memory: 2g
+
+  validator_3:
+    container_name: validator_3
+    image: hyperledger/besu:23.4.4
+    user: "1000:1000"
+    entrypoint:
+      - "/bin/bash"
+      - "-c"
+      - >
+        sleep 10; 
+        /opt/besu/bin/besu 
+        --data-path=/opt/besu/data 
+        --metrics-enabled 
+        --metrics-host=0.0.0.0 
+        --metrics-port=9548 
+        --genesis-file=/opt/besu/genesis.json 
+        --bootnodes='enode://a50a100f8c28b181a07019ff1ecdfd9fb4ba33822a84e57f5e4dc339c16149cc03f7e5adcffcee7095a8419c83fc3923618cdb3d6f3985a26b4d983ba550ac1d@172.16.239.10:30303'
+        --p2p-port=30306 
+        --rpc-http-enabled 
+        --rpc-ws-enabled 
+        --rpc-ws-port=61747 
+        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT
+        --host-allowlist='*' 
+        --rpc-http-cors-origins='all' 
+        --rpc-http-port=8548 
+        --rpc-http-host=0.0.0.0 
+        --min-gas-price=0
+        --pruning-enabled=true 
+        --pruning-blocks-retained=256
+    volumes:
+      - ./data/genesis.json:/opt/besu/genesis.json
+      - ./data/node4/data:/opt/besu/data
+      - ./data/log-config.xml:/config/log-config.xml
+    ports:
+      - "8548:8548"
+      - "30306:30306"
+      - "61747:61747"
+    depends_on:
+      - bootnode
+    networks:
+      blockchain-network:
+        ipv4_address: 172.16.239.13
+    deploy:
+        resources:
+          limits:
+            cpus: '2.0'
+            memory: 4g
+          reservations:
+            cpus: '1.0'
+            memory: 2g
+
+
+networks:
+  blockchain-network:
+    external: true
