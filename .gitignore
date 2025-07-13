@@ -1,1 +1,17 @@
 data_backup
+/data/node1/data/caches
+/data/node1/data/database
+/data/node1/data/DATABASE_METADATA.json
+
+/data/node2/data/caches
+/data/node2/data/database
+/data/node2/data/DATABASE_METADATA.json
+
+/data/node3/data/caches
+/data/node3/data/database
+/data/node3/data/DATABASE_METADATA.json
+
+/data/node4/data/caches
+/data/node4/data/database
+/data/node4/data/DATABASE_METADATA.json
+
