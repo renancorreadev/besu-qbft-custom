@@ -20,7 +20,7 @@ services:
         --rpc-ws-enabled 
         --rpc-ws-port=6174 
         --rpc-ws-host=0.0.0.0 
-        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT
+        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT,ADMIN
         --host-allowlist='*' 
         --rpc-http-cors-origins='all' 
         --rpc-http-port=8545 
@@ -72,7 +72,7 @@ services:
         --rpc-http-enabled 
         --rpc-ws-enabled 
         --rpc-ws-port=6175 
-        --rpc-http-api=ETH,NET,IBFT,TXPOOL 
+        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT,ADMIN
         --host-allowlist='*' 
         --rpc-http-cors-origins='all' 
         --rpc-http-port=8546 
@@ -124,7 +124,7 @@ services:
         --rpc-http-enabled 
         --rpc-ws-enabled 
         --rpc-ws-port=6176 
-        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT
+        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT,ADMIN
         --host-allowlist='*' 
         --rpc-http-cors-origins='all' 
         --rpc-http-port=8547 
@@ -176,7 +176,7 @@ services:
         --rpc-http-enabled 
         --rpc-ws-enabled 
         --rpc-ws-port=61747 
-        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT
+        --rpc-http-api=ETH,NET,QBFT,TXPOOL,IBFT,ADMIN
         --host-allowlist='*' 
         --rpc-http-cors-origins='all' 
         --rpc-http-port=8548 
